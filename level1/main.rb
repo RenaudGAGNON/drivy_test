@@ -15,8 +15,18 @@ class Car
     @price_per_day = params['price_per_day']
   end
 
+  def self.find(id)
+    @@cars.find{ |car| car.id == id }
+  end
+
   def self.create(params = {})
-    @@cars << self.new(params)
+    car = self.new(params)
+    @@cars << car
+    car
+  end
+
+  def self.all
+    @@cars
   end
 
   def self.find(id)
@@ -39,14 +49,28 @@ class Rental
   end
 
   def self.create(params = {})
-    @@rentals << self.new(params)
+    rental = self.new(params)
+    @@rentals << rental
+    rental
   end
 
   def self.all
     @@rentals
   end
-end
 
+  def price
+    (price_per_day + price_per_km).to_i
+  end
+
+private
+  def price_per_km
+    @car.price_per_km * @distance
+  end
+
+  def price_per_day
+    @car.price_per_day * ((@end_date - @start_date) + 1)
+  end
+end
 
 input = File.read('data/input.json')
 data = JSON.parse(input)
@@ -54,4 +78,4 @@ data = JSON.parse(input)
 data['cars'].each { |car| Car.create car }
 data['rentals'].each { |rental| Rental.create(rental) }
 
-Rental.all.each { |rental| puts "#{rental.id} - #{rental.car.id}" }
+Rental.all.each { |rental| puts "#{rental.id} - #{rental.price}" }
