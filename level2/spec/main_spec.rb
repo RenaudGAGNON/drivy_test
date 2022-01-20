@@ -57,9 +57,16 @@ describe Rental do
     it 'should update the collection' do
       expect{ rental }.to change(Rental.all, :count).by(1)
     end
-
-    it 'should have a correct price' do
-      expect(rental.price).to eq(4100)
+    context 'when the car is rented for 2 days' do
+      it 'should have a correct price' do
+        expect(rental.price).to eq(3900)
+      end
+    end
+    context 'when the car is rented for 12 days' do
+      let(:rental_params) { { 'id' => 1, 'car_id' => 1, 'start_date' => '2022-01-20', 'end_date' => '2022-01-31', 'distance' => 10 } }
+      it 'should have a correct price' do
+        expect(rental.price).to eq(17900)
+      end
     end
   end
 end
@@ -71,10 +78,10 @@ describe RentalService do
     subject(:rental_import) { RentalService.import_file input_file }
 
     it 'should import data' do
-      expect{ rental_import }.to change(Car.all, :count).by(3)
-      expect(Car.all.last&.id).to eq(3)
+      expect{ rental_import }.to change(Car.all, :count).by(1)
+      expect(Car.all.last&.id).to eq(1)
       expect(Rental.all.last&.id).to eq(3)
-      expect(Rental.all.last&.car.id).to eq(2)
+      expect(Rental.all.last&.car.id).to eq(1)
     end
   end
 
