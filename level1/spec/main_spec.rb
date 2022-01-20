@@ -47,7 +47,7 @@ describe Rental do
     it 'should update the collection' do
       expect{ rental }.to change(Rental.all, :count).by(1)
     end
-    
+
     it 'should have a correct price' do
       expect(rental.price).to eq(4100)
     end
