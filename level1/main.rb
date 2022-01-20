@@ -65,6 +65,10 @@ class Rental
     (price_per_day + price_per_km).to_i
   end
 
+  def to_json
+    {'id': id, 'price': price }
+  end
+
 private
   def price_per_km
     @car.price_per_km * @distance
@@ -81,4 +85,5 @@ data = JSON.parse(input)
 data['cars'].each { |car| Car.create car }
 data['rentals'].each { |rental| Rental.create(rental) }
 
-Rental.all.each { |rental| puts "#{rental.id} - #{rental.price}" }
+rentals = { 'rentals': Rental.all.map(&:to_json) }.to_json
+File.write('data/output.json', rentals)
