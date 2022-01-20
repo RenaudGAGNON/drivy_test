@@ -61,11 +61,23 @@ describe Rental do
       it 'should have a correct price' do
         expect(rental.price).to eq(3900)
       end
+      it 'should have correct commisions' do
+        expect(rental.commission).to eq(1170)
+        expect(rental.insurance_fee).to eq(585)
+        expect(rental.assistance_fee).to eq(200)
+        expect(rental.internal_commision).to eq(385)
+      end
     end
     context 'when the car is rented for 12 days' do
       let(:rental_params) { { 'id' => 1, 'car_id' => 1, 'start_date' => '2022-01-20', 'end_date' => '2022-01-31', 'distance' => 10 } }
       it 'should have a correct price' do
         expect(rental.price).to eq(17900)
+      end
+      it 'should have correct commisions' do
+        expect(rental.commission).to eq(5370)
+        expect(rental.insurance_fee).to eq(2685)
+        expect(rental.assistance_fee).to eq(1200)
+        expect(rental.internal_commision).to eq(1485)
       end
     end
   end
