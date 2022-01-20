@@ -91,3 +91,21 @@ describe RentalService do
 
   end
 end
+
+describe "Main" do
+  context 'Executing main' do
+    subject(:output_data) do
+      RentalService.import_file 'input.json'
+      RentalService.export_file 'output.json'
+      input = File.read("data/output.json")
+      JSON.parse(input)
+    end
+    let(:expected_output_data) {
+      input = File.read("data/expected_output.json")
+      JSON.parse(input)
+    }
+    it 'should have the same output than the expected output' do
+      expect(output_data).to eq(expected_output_data)
+    end
+  end
+end
