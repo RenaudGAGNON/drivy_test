@@ -3,7 +3,7 @@ module PriceRulesConcern
     price = super
 
     nb_days = ((@end_date - @start_date) + 1)
-    
+
     if nb_days > 1
       nb_days_discounted = [nb_days, 4].min - 1
       price -= @car.price_per_day * nb_days_discounted * 0.1

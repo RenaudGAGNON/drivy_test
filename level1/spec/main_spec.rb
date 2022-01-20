@@ -88,7 +88,6 @@ describe RentalService do
       rental_export
       expect(File.exists? "data/output_test.json").to be(true)
     end
-
   end
 end
 

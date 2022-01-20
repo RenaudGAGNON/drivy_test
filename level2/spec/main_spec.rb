@@ -57,9 +57,16 @@ describe Rental do
     it 'should update the collection' do
       expect{ rental }.to change(Rental.all, :count).by(1)
     end
-
-    it 'should have a correct price' do
-      expect(rental.price).to eq(4100)
+    context 'when the car is rented for 2 days' do
+      it 'should have a correct price' do
+        expect(rental.price).to eq(3900)
+      end
+    end
+    context 'when the car is rented for 12 days' do
+      let(:rental_params) { { 'id' => 1, 'car_id' => 1, 'start_date' => '2022-01-20', 'end_date' => '2022-01-31', 'distance' => 10 } }
+      it 'should have a correct price' do
+        expect(rental.price).to eq(17900)
+      end
     end
   end
 end
@@ -88,6 +95,23 @@ describe RentalService do
       rental_export
       expect(File.exists? "data/output_test.json").to be(true)
     end
+  end
+end
 
+describe "Main" do
+  context 'Executing main' do
+    subject(:output_data) do
+      RentalService.import_file 'input.json'
+      RentalService.export_file 'output.json'
+      input = File.read("data/output.json")
+      JSON.parse(input)
+    end
+    let(:expected_output_data) {
+      input = File.read("data/expected_output.json")
+      JSON.parse(input)
+    }
+    it 'should have the same output than the expected output' do
+      expect(output_data).to eq(expected_output_data)
+    end
   end
 end
