@@ -38,6 +38,9 @@ class Rental
   @@rentals = []
   attr_reader :id
   attr_reader :car
+  attr_reader :start_date
+  attr_reader :end_date
+  attr_reader :distance
 
   def initialize(params = {})
     @id = params['id']
