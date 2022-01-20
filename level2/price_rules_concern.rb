@@ -1,0 +1,2 @@
+module PriceRulesConcern
+end
