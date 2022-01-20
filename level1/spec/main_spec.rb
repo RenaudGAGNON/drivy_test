@@ -1,5 +1,15 @@
 require './main.rb'
 
+RSpec.configure do |config|
+  config.before(:all) do
+    Car.class_variable_set :@@cars, []
+    Rental.class_variable_set :@@rentals, []
+  end
+  config.after(:all) do
+    File.delete('data/output_test.json') if File.exist? 'data/output_test.json'
+  end
+end
+
 describe Car do
   context "Create Car" do
     subject(:car) { Car.create car_params }
@@ -51,5 +61,33 @@ describe Rental do
     it 'should have a correct price' do
       expect(rental.price).to eq(4100)
     end
+  end
+end
+
+describe RentalService do
+  let(:output_file) { 'output_test.json' }
+  let(:input_file) { 'input.json' }
+  context 'import file' do
+    subject(:rental_import) { RentalService.import_file input_file }
+
+    it 'should import data' do
+      expect{ rental_import }.to change(Car.all, :count).by(3)
+      expect(Car.all.last&.id).to eq(3)
+      expect(Rental.all.last&.id).to eq(3)
+      expect(Rental.all.last&.car.id).to eq(2)
+    end
+  end
+
+  context 'export file' do
+    before do
+      RentalService.import_file('input.json')
+    end
+    subject(:rental_export) { RentalService.export_file output_file }
+
+    it 'should export data to output file' do
+      rental_export
+      expect(File.exists? "data/output_test.json").to be(true)
+    end
+
   end
 end
